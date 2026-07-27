@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Free Education Support Portal</title>
+    <style>
+        /* ==========================================================================
+           1. CSS VARIABLES & BASE RESET
+           ========================================================================== */
+        :root {
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #3b0764;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-bg-hover: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --primary-gradient-hover: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            --accent-glow: rgba(139, 92, 246, 0.5);
+            
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --text-dim: #94a3b8;
+            
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-btn: 50px;
+            
+            --transition-fast: 0.2s ease;
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-gradient-start);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 40px;
+        }
+
+        /* ==========================================================================
+           2. REUSABLE GLASSMORPHISM & LAYOUT UTILITIES
+           ========================================================================== */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--glass-shadow);
+            padding: 30px;
+            transition: transform var(--transition-smooth), background var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+        }
+
+        .section-padding {
+            padding: 40px 0;
+            scroll-margin-top: 20px; /* Smooth scroll positioning fix */
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        /* ==========================================================================
+           3. BUTTON STYLES
+           ========================================================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: var(--radius-btn);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transition: all var(--transition-smooth);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--primary-gradient-hover);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px var(--accent-glow), 0 0 15px rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(0.99);
+        }
+
+        /* ==========================================================================
+           4. HERO SECTION
+           ========================================================================== */
+        .hero {
+            padding: 80px 0 50px 0;
+            text-align: center;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 50px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #a78bfa;
+            margin-bottom: 20px;
+        }
+
+        .hero .description {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ==========================================================================
+           5. FEATURE GRID SECTION
+           ========================================================================== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-5px);
+            border-color: rgba(167, 139, 250, 0.5);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+
+        .feature-card .icon {
+            font-size: 2.2rem;
+            line-height: 1;
+        }
+
+        .feature-card .title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* ==========================================================================
+           6. NOTICE SECTION
+           ========================================================================== */
+        .notice-card {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-left: 6px solid #f59e0b;
+        }
+
+        .notice-card h2 {
+            color: #fbbf24;
+        }
+
+        .notice-card p {
+            color: #fef3c7;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* ==========================================================================
+           7. INFO CARDS (For Mobile & Secure Sections)
+           ========================================================================== */
+        .info-card-inner {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-md);
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 15px;
+        }
+
+        .info-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* ==========================================================================
+           8. ANIMATIONS & SCROLL OBSERVER
+           ========================================================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==========================================================================
+           9. FOOTER
+           ========================================================================== */
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        footer p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        footer .tagline {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        /* ==========================================================================
+           10. RESPONSIVE MEDIA QUERIES
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.15rem;
+            }
+
+            .hero .description {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .glass-card {
+                padding: 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+                font-size: 1rem;
+                padding: 16px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+
+        <!-- ===================================================================
+             HERO SECTION
+             =================================================================== -->
+        <section class="hero section-padding fade-in">
+            <div class="glass-card hero-card">
+                <h1>📚 Free Education Support Portal</h1>
+                <div class="subtitle">Quality Education Should Be Free for Everyone.</div>
+                <p class="description">
+                    Welcome! Our mission is to help students by providing completely FREE educational resources. Everything available on this website is absolutely free for every student.
+                </p>
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             FEATURE SECTION (NAVIGATION CARDS)
+             =================================================================== -->
+        <section class="section-padding fade-in">
+            <div class="features-grid">
+                
+                <a href="#notes" class="feature-card">
+                    <span class="icon">✅</span>
+                    <span class="title">100% Free Notes</span>
+                </a>
+
+                <a href="#pdf-books" class="feature-card">
+                    <span class="icon">📚</span>
+                    <span class="title">Free PDF Books</span>
+                </a>
+
+                <a href="#previous-papers" class="feature-card">
+                    <span class="icon">📝</span>
+                    <span class="title">Previous Year Papers</span>
+                </a>
+
+                <a href="#practice" class="feature-card">
+                    <span class="icon">🎯</span>
+                    <span class="title">Practice Questions</span>
+                </a>
+
+                <a href="#mobile" class="feature-card">
+                    <span class="icon">📱</span>
+                    <span class="title">Mobile Friendly</span>
+                </a>
+
+                <a href="#secure" class="feature-card">
+                    <span class="icon">⚡</span>
+                    <span class="title">Fast & Secure</span>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             NOTICE SECTION
+             =================================================================== -->
+        <section class="section-padding fade-in">
+            <div class="glass-card notice-card">
+                <h2 class="section-title">📢 Important Notice</h2>
+                <p>
+                    All study materials on this website are completely free. Some resources may redirect through our official WhatsApp community before reaching the final study material. This helps us maintain the platform while keeping all content free.
+                </p>
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             RESOURCE SECTIONS
+             =================================================================== -->
+
+        <!-- Section 1: Notes -->
+        <section id="notes" class="section-padding fade-in">
+            <div class="glass-card">
+                <h2 class="section-title">📘 100% Free Notes</h2>
+                <p class="section-desc">Download free handwritten notes and study material.</p>
+                <a href="https://whatsapp.com/channel/0029Vb7WRByKGGGBBPkwkX1Y" target="_blank" rel="noopener noreferrer" class="btn">
+                    📥 GET FREE NOTES
+                </a>
+            </div>
+        </section>
+
+        <!-- Section 2: PDF Books -->
+        <section id="pdf-books" class="section-padding fade-in">
+            <div class="glass-card">
+                <h2 class="section-title">📚 Free PDF Books</h2>
+                <p class="section-desc">Access free PDF books.</p>
+                <a href="https://whatsapp.com/channel/0029Vb7WRByKGGGBBPkwkX1Y" target="_blank" rel="noopener noreferrer" class="btn">
+                    📥 DOWNLOAD PDF BOOKS
+                </a>
+            </div>
+        </section>
+
+        <!-- Section 3: Previous Year Papers -->
+        <section id="previous-papers" class="section-padding fade-in">
+            <div class="glass-card">
+                <h2 class="section-title">📝 Previous Year Papers</h2>
+                <p class="section-desc">Practice with previous year papers.</p>
+                <a href="https://whatsapp.com/channel/0029Vb7WRByKGGGBBPkwkX1Y" target="_blank" rel="noopener noreferrer" class="btn">
+                    📥 GET PREVIOUS YEAR PAPERS
+                </a>
+            </div>
+        </section>
+
+        <!-- Section 4: Practice Questions -->
+        <section id="practice" class="section-padding fade-in">
+            <div class="glass-card">
+                <h2 class="section-title">🎯 Practice Questions</h2>
+                <p class="section-desc">Practice important questions.</p>
+                <a href="https://whatsapp.com/channel/0029Vb7WRByKGGGBBPkwkX1Y" target="_blank" rel="noopener noreferrer" class="btn">
+                    📥 START PRACTICE
+                </a>
+            </div>
+        </section>
+
+        <!-- Section 5: Mobile Friendly -->
+        <section id="mobile" class="section-padding fade-in">
+            <div class="glass-card">
+                <h2 class="section-title">📱 Mobile Friendly</h2>
+                <p class="section-desc">Our website works perfectly on mobile, tablet, and desktop.</p>
+                
+                <div class="info-card-inner">
+                    <h3> Seamless Experience Across All Devices</h3>
+                    <p style="color: var(--text-muted); margin-top: 8px;">
+                        Whether you are studying on a smartphone while commuting, using a tablet at your desk, or working on a desktop PC, our interface adjusts dynamically to ensure effortless readability and downloading.
+                    </p>
+                    <ul class="info-list">
+                        <li>⚡ Responsive Layout</li>
+                        <li>⚡ Fast Load Times</li>
+                        <li>⚡ Low Data Usage</li>
+                        <li>⚡ Touch Optimized</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Fast & Secure -->
+        <section id="secure" class="section-padding fade-in">
+            <div class="glass-card">
+                <h2 class="section-title">⚡ Fast & Secure</h2>
+                <p class="section-desc">All resources are safe and quickly accessible.</p>
+                
+                <div class="info-card-inner">
+                    <h3> High-Speed & Protected Downloads</h3>
+                    <p style="color: var(--text-muted); margin-top: 8px;">
+                        Your safety and convenience are our top priorities. We guarantee direct access to verified study content without harmful popups or malicious links.
+                    </p>
+                    <ul class="info-list">
+                        <li>🛡️ 100% Virus Free Content</li>
+                        <li>⚡ Direct Fast Downloads</li>
+                        <li>🔒 Verified Official Channels</li>
+                        <li>🌐 24/7 Availability</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =======================================================================
+         FOOTER
+         ======================================================================= -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Free Education Support Portal</p>
+            <p class="tagline">Education Should Be Accessible to Everyone.</p>
+        </div>
+    </footer>
+
+    <!-- =======================================================================
+         JAVASCRIPT LOGIC
+         ======================================================================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            /* -----------------------------------------------------------------
+               1. SMOOTH SCROLL FOR FEATURE CARDS
+               ----------------------------------------------------------------- */
+            const featureLinks = document.querySelectorAll('.feature-card');
+
+            featureLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            /* -----------------------------------------------------------------
+               2. INTERSECTION OBSERVER FOR FADE-IN ANIMATIONS
+               ----------------------------------------------------------------- */
+            const fadeElements = document.querySelectorAll('.fade-in');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            fadeElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
